@@ -1,0 +1,73 @@
+name: AMI Share Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      TOOLKIT_VERSION:
+        description: 'Version of the Ansible Automation Toolkit'
+        required: true
+        default: 'default'
+      REGION:
+        description: 'AWS region to operate in (e.g., us-west-2)'
+        required: true
+        default: 'il-central-1'
+      TARGET_ACCOUNT_ID:
+        description: 'AWS account ID to share AMIs with'
+        required: true
+        default: '975050066294'
+      PROFILE:
+        description: 'AWS CLI profile to use (optional)'
+        required: false
+        default: ''
+
+permissions:
+  id-token: write   # Required for requesting the JWT
+  contents: read    # Required for actions/checkout
+
+jobs:
+  ami_share:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Configure AWS Credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::992382682634:role/ansible-playbook-workflow-role"
+          aws-region: "${{ inputs.REGION }}"  # Use the input region
+
+      # Step 3: Download the share_amis.sh Script
+      - name: Download share_amis.sh script
+        run: |
+          echo "Downloading share_amis.sh script from Ansible Automation Toolkit..."
+          wget https://raw.githubusercontent.com/inqwise/ansible-automation-toolkit/${{ inputs.TOOLKIT_VERSION }}/share_amis.sh -O share_amis.sh
+          chmod +x share_amis.sh
+          echo "share_amis.sh downloaded and made executable."
+
+      # Step 4: Execute the share_amis.sh Script
+      - name: Share AMI
+        run: |
+          echo "Starting AMI sharing process..."
+          
+          # Initialize an empty array for optional arguments
+          OPTIONAL_ARGS=()
+          
+          # Add --profile argument if PROFILE input is provided
+          if [[ -n "${{ inputs.PROFILE }}" ]]; then
+            OPTIONAL_ARGS+=(--profile "${{ inputs.PROFILE }}")
+          fi
+          
+          # Execute the share_amis.sh script with mandatory and optional arguments
+          ./share_amis.sh \
+            --region "${{ inputs.REGION }}" \
+            --target-account-id "${{ inputs.TARGET_ACCOUNT_ID }}" \
+            "${OPTIONAL_ARGS[@]}"
+          
+          echo "AMI sharing process completed."
+
+      # Optional Step 5: Upload Logs or Artifacts (Enhancement)
+      # You can add steps here to upload logs or artifacts for auditing purposes.
