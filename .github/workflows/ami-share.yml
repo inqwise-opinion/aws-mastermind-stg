@@ -37,7 +37,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: "arn:aws:iam::992382682634:role/ansible-playbook-workflow-role"
+          role-to-assume: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
           aws-region: "${{ inputs.REGION }}"  # Use the input region
 
       # Step 3: Download the share_amis.sh Script
