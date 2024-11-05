@@ -1,0 +1,69 @@
+name: AMI Assign Template Workflow
+
+on:
+  schedule:
+    - cron: '10,20 0 * * *'  # Runs daily at 00:10 and 00:20 UTC
+  workflow_dispatch:
+    inputs:
+      TOOLKIT_VERSION:
+        description: 'Version of the Ansible Automation Toolkit'
+        required: false
+        default: 'default'
+      REGION:
+        description: 'AWS region for assignment (e.g., il-central-1)'
+        required: false
+        default: 'il-central-1'
+      MAKE_DEFAULT_VERSION:
+        description: 'Make Default Version (true/false)'
+        required: false
+        default: 'true'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  ami_assign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::975050066294:role/aws-mastermind-workflow-role"
+          aws-region: "${{ inputs.REGION || 'il-central-1' }}"
+
+      - name: Download assign_ami_to_template_bulk.sh script
+        run: |
+          TOOLKIT_VERSION="${{ inputs.TOOLKIT_VERSION || 'default' }}"
+          echo "Downloading assign_ami_to_template_bulk.sh script from toolkit version $TOOLKIT_VERSION..."
+          wget https://raw.githubusercontent.com/inqwise/ansible-automation-toolkit/${TOOLKIT_VERSION}/ami/assign_ami_to_template_bulk.sh -O assign_ami_to_template_bulk.sh
+          chmod +x assign_ami_to_template_bulk.sh
+          echo "assign_ami_to_template_bulk.sh downloaded and made executable."
+
+      - name: Assign AMIs to Templates
+        run: |
+          # Set variables with defaults based on trigger
+          REGION="${{ inputs.REGION || 'il-central-1' }}"
+          TOOLKIT_VERSION="${{ inputs.TOOLKIT_VERSION || 'default' }}"
+          MAKE_DEFAULT_VERSION="${{ inputs.MAKE_DEFAULT_VERSION || 'true' }}"
+
+          echo "Region: $REGION"
+          echo "Toolkit Version: $TOOLKIT_VERSION"
+          echo "Make Default Version: $MAKE_DEFAULT_VERSION"
+
+          # Build the command
+          CMD="./assign_ami_to_template_bulk.sh --region \"$REGION\" --toolkit-version \"$TOOLKIT_VERSION\""
+
+          # Add --make-default-version if set to true
+          if [[ "$MAKE_DEFAULT_VERSION" == "true" ]]; then
+            CMD+=" --make-default-version"
+          fi
+
+          echo "Executing command: $CMD"
+          eval "$CMD"
+
+          echo "AMI assignment process completed."
