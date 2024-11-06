@@ -22,49 +22,18 @@ on:
         required: false
         default: ''
 
-permissions:
-  id-token: write   # Required for requesting the JWT
-  contents: read    # Required for actions/checkout
+env:
+  JOB_TOOLKIT_VERSION: 'default'
+  JOB_REGION: 'il-central-1'
+  JOB_SOURCE_REGION: ''
+  JOB_SOURCE_ACCOUNT_ID: ''
 
 jobs:
   ami_copy:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Checkout the Repository
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      # Step 2: Configure AWS Credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: "arn:aws:iam::975050066294:role/aws-mastermind-workflow-role"
-          aws-region: "${{ inputs.REGION || 'il-central-1' }}"  # Use default if not provided
-
-      # Step 3: Download the copy_shared_amis.sh Script
-      - name: Download copy_shared_amis.sh script
-        run: |
-          echo "Downloading copy_shared_amis.sh script from Ansible Automation Toolkit..."
-          wget https://raw.githubusercontent.com/inqwise/ansible-automation-toolkit/${{ inputs.TOOLKIT_VERSION || 'default' }}/ami/copy_shared_amis.sh -O copy_shared_amis.sh
-          chmod +x copy_shared_amis.sh
-          echo "copy_shared_amis.sh downloaded and made executable."
-
-      # Step 4: Execute the copy_shared_amis.sh Script
-      - name: Copy Shared AMIs
-        run: |
-          echo "Starting AMI copying process..."
-
-          # Initialize the command with mandatory arguments
-          CMD="./copy_shared_amis.sh --source-region \"${{ inputs.SOURCE_REGION || 'eu-central-1' }}\" --region \"${{ inputs.REGION || 'il-central-1' }}\" --toolkit-version \"${{ inputs.TOOLKIT_VERSION || 'default' }}\""
-
-          # Add --source-account-id if SOURCE_ACCOUNT_ID input is provided
-          if [[ -n "${{ inputs.SOURCE_ACCOUNT_ID || '' }}" ]]; then
-            CMD+=" --source-account-id \"${{ inputs.SOURCE_ACCOUNT_ID || '' }}\""
-          fi
-
-          # Execute the command
-          echo "Executing command: $CMD"
-          eval "$CMD"
-
-          echo "AMI copying process completed."
+    uses: "inqwise/ansible-automation-toolkit/.github/workflows/goldenimage-workflow.yml@${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+    with:
+      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+      TOOLKIT_VERSION: "${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+      REGION: "${{ inputs.REGION || JOB_REGION }}"
+      SOURCE_REGION: "${{ inputs.SOURCE_REGION || JOB_SOURCE_REGION }}"
+      SOURCE_ACCOUNT_ID: "${{ inputs.SOURCE_ACCOUNT_ID || JOB_SOURCE_ACCOUNT_ID }}"

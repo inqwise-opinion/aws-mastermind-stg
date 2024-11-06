@@ -23,39 +23,15 @@ on:
     - cron: '0 3 * * *' # Runs daily at 03:00 UTC; adjust as needed
 
 env:
-  DEFAULT_REGION: 'eu-central-1'
-  DEFAULT_TOOLKIT_VERSION: 'default'
-  DEFAULT_KEEP_HISTORY: 3
-  DEFAULT_LIMIT: 0
+  JOB_REGION: 'eu-central-1'
+  JOB_TOOLKIT_VERSION: 'default'
+  JOB_KEEP_HISTORY: 3
+  JOB_LIMIT: 0
 
 jobs:
   deregister_old_amis:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: "arn:aws:iam::975050066294:role/aws-mastermind-workflow-role"
-          aws-region: "${{ inputs.region || env.DEFAULT_REGION }}"
-
-      - name: Download deregister_old_ami_by_app.sh script
-        run: |
-          TOOLKIT_VERSION="${{ inputs.toolkit_version || env.DEFAULT_TOOLKIT_VERSION }}"
-          echo "Downloading deregister_old_ami_by_app.sh script from toolkit version $TOOLKIT_VERSION..."
-          wget https://raw.githubusercontent.com/inqwise/ansible-automation-toolkit/${TOOLKIT_VERSION}/ami/deregister_old_ami_by_app.sh -O deregister_old_ami_by_app.sh
-          chmod +x deregister_old_ami_by_app.sh
-          echo "deregister_old_ami_by_app.sh downloaded and made executable."
-
-      - name: Run Deregister AMI Script
-        run: |
-          ./deregister_old_ami_by_app.sh \
-            --region "${{ inputs.region || env.DEFAULT_REGION }}" \
-            --keep-history "${{ inputs.keep_history || env.DEFAULT_KEEP_HISTORY }}" \
-            --limit "${{ inputs.limit || env.DEFAULT_LIMIT }}"
-
-      - name: Confirm Completion
-        run: echo "Deregister Old AMIs workflow completed successfully."
+    uses: "inqwise/ansible-automation-toolkit/.github/workflows/goldenimage-workflow.yml@${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+    with:
+      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+      TOOLKIT_VERSION: "${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+      REGION: "${{ inputs.REGION || JOB_REGION }}"
