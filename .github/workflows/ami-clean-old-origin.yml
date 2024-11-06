@@ -20,18 +20,21 @@ on:
         required: false
         default: 'default'
   schedule:
-    - cron: '0 3 * * *' # Runs daily at 03:00 UTC; adjust as needed
+    - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
 
 env:
-  JOB_REGION: 'eu-central-1'
-  JOB_TOOLKIT_VERSION: 'default'
-  JOB_KEEP_HISTORY: 3
-  JOB_LIMIT: 0
+  ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+  REGION: ${{ github.event.inputs.region || 'eu-central-1' }}
+  TOOLKIT_VERSION: ${{ github.event.inputs.toolkit_version || 'default' }}
+  KEEP_HISTORY: ${{ github.event.inputs.keep_history || '3' }}
+  LIMIT: ${{ github.event.inputs.limit || '0' }}
 
 jobs:
   deregister_old_amis:
-    uses: "inqwise/ansible-automation-toolkit/.github/workflows/goldenimage-workflow.yml@${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@${{ env.TOOLKIT_VERSION }}
     with:
-      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-      TOOLKIT_VERSION: "${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
-      REGION: "${{ inputs.REGION || JOB_REGION }}"
+      ROLE: ${{ env.ROLE }}
+      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
+      REGION: ${{ env.REGION }}
+      KEEP_HISTORY: ${{ env.KEEP_HISTORY }}
+      LIMIT: ${{ env.LIMIT }}

@@ -19,15 +19,16 @@ on:
         default: 'true'
 
 env:
-  JOB_TOOLKIT_VERSION: 'default'
-  JOB_REGION: 'il-central-1'
-  JOB_MAKE_DEFAULT_VERSION: 'true'
+  ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+  TOOLKIT_VERSION: ${{ github.event.inputs.TOOLKIT_VERSION || 'default' }}
+  REGION: ${{ github.event.inputs.REGION || 'il-central-1' }}
+  MAKE_DEFAULT_VERSION: ${{ github.event.inputs.MAKE_DEFAULT_VERSION || 'true' }}
 
 jobs:
   ami_assign:
-    uses: 'inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}'
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@${{ env.TOOLKIT_VERSION }}
     with:
-      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-      TOOLKIT_VERSION: "${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
-      REGION: "${{ inputs.REGION || JOB_REGION }}"
-      MAKE_DEFAULT_VERSION: "${{ inputs.MAKE_DEFAULT_VERSION || JOB_MAKE_DEFAULT_VERSION }}"
+      ROLE: ${{ env.ROLE }}
+      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
+      REGION: ${{ env.REGION }}
+      MAKE_DEFAULT_VERSION: ${{ env.MAKE_DEFAULT_VERSION }}

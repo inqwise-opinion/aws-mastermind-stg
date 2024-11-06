@@ -23,17 +23,18 @@ on:
         default: ''
 
 env:
-  JOB_TOOLKIT_VERSION: 'default'
-  JOB_REGION: 'il-central-1'
-  JOB_SOURCE_REGION: ''
-  JOB_SOURCE_ACCOUNT_ID: ''
+  ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+  TOOLKIT_VERSION: ${{ github.event.inputs.TOOLKIT_VERSION || 'default' }}
+  REGION: ${{ github.event.inputs.REGION || 'il-central-1' }}
+  SOURCE_REGION: ${{ github.event.inputs.SOURCE_REGION || 'eu-central-1' }}
+  SOURCE_ACCOUNT_ID: ${{ github.event.inputs.SOURCE_ACCOUNT_ID || '' }}
 
 jobs:
   ami_copy:
-    uses: "inqwise/ansible-automation-toolkit/.github/workflows/goldenimage-workflow.yml@${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-copy-shared.yml@${{ env.TOOLKIT_VERSION }}
     with:
-      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-      TOOLKIT_VERSION: "${{ inputs.TOOLKIT_VERSION || JOB_TOOLKIT_VERSION }}"
-      REGION: "${{ inputs.REGION || JOB_REGION }}"
-      SOURCE_REGION: "${{ inputs.SOURCE_REGION || JOB_SOURCE_REGION }}"
-      SOURCE_ACCOUNT_ID: "${{ inputs.SOURCE_ACCOUNT_ID || JOB_SOURCE_ACCOUNT_ID }}"
+      ROLE: ${{ env.ROLE }}
+      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
+      REGION: ${{ env.REGION }}
+      SOURCE_REGION: ${{ env.SOURCE_REGION }}
+      SOURCE_ACCOUNT_ID: ${{ env.SOURCE_ACCOUNT_ID }}
