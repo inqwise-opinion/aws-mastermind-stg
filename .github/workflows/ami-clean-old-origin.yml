@@ -3,19 +3,23 @@ name: Deregister Old AMIs
 on:
   workflow_dispatch:
     inputs:
-      region:
+      REGION:
         description: 'AWS Region'
         required: true
+        default: 'il-central-1'
+      WORK_REGION:
+        description: 'AWS Work Region'
+        required: true
         default: 'eu-central-1'
-      keep_history:
+      KEEP_HISTORY:
         description: 'Number of recent AMIs to keep per app'
         required: false
         default: '3'
-      limit:
+      LIMIT:
         description: 'Limit on number of app groups to process'
         required: false
         default: '0'
-      toolkit_version:
+      TOOLKIT_VERSION:
         description: 'Version of the toolkit for script download'
         required: false
         default: 'default'
@@ -25,19 +29,22 @@ on:
 permissions:
   id-token: write
   contents: read
-  
+
 env:
   ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-  REGION: ${{ inputs.region || 'eu-central-1' }}
-  TOOLKIT_VERSION: ${{ inputs.toolkit_version || 'default' }}
-  KEEP_HISTORY: ${{ inputs.keep_history || '3' }}
+  REGION: ${{ inputs.REGION || 'il-central-1' }}
+  WORK_REGION: ${{ inputs.WORK_REGION || 'eu-central-1' }}
+  TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
+  KEEP_HISTORY: ${{ inputs.KEEP_HISTORY || '3' }}
   LIMIT: ${{ inputs.limit || '0' }}
 
 jobs:
   deregister_old_amis:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@default
     with:
+      ROLE: ${{ github.env.ROLE }}
       TOOLKIT_VERSION: ${{ github.env.TOOLKIT_VERSION }}
       REGION: ${{ github.env.REGION }}
+      WORK_REGION: ${{ github.env.WORK_REGION }}
       KEEP_HISTORY: ${{ github.env.KEEP_HISTORY }}
       LIMIT: ${{ github.env.LIMIT }}
