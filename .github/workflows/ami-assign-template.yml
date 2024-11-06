@@ -22,17 +22,11 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-  TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
-  REGION: ${{ inputs.REGION || 'il-central-1' }}
-  MAKE_DEFAULT_VERSION: ${{ inputs.MAKE_DEFAULT_VERSION || 'true' }}
-
 jobs:
   ami_assign:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@default
     with:
-      ROLE: ${{ github.env.ROLE }}
-      TOOLKIT_VERSION: ${{ github.env.TOOLKIT_VERSION }}
-      REGION: ${{ github.env.REGION }}
-      MAKE_DEFAULT_VERSION: ${{ github.env.MAKE_DEFAULT_VERSION }}
+      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+      TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
+      REGION: ${{ inputs.REGION || 'il-central-1' }}
+      MAKE_DEFAULT_VERSION: ${{ inputs.MAKE_DEFAULT_VERSION || 'true' }}

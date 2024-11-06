@@ -26,19 +26,12 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-  TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
-  REGION: ${{ inputs.REGION || 'il-central-1' }}
-  SOURCE_REGION: ${{ inputs.SOURCE_REGION || 'eu-central-1' }}
-  SOURCE_ACCOUNT_ID: ${{ inputs.SOURCE_ACCOUNT_ID || '' }}
-
 jobs:
   ami_copy:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-copy-shared.yml@default
     with:
-      ROLE: ${{ env.ROLE }}
-      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
-      REGION: ${{ env.REGION }}
-      SOURCE_REGION: ${{ env.SOURCE_REGION }}
-      SOURCE_ACCOUNT_ID: ${{ env.SOURCE_ACCOUNT_ID }}
+      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+      TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
+      REGION: ${{ inputs.REGION || 'il-central-1' }}
+      SOURCE_REGION: ${{ inputs.SOURCE_REGION || 'eu-central-1' }}
+      SOURCE_ACCOUNT_ID: ${{ inputs.SOURCE_ACCOUNT_ID || '' }}
