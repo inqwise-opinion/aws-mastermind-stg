@@ -22,6 +22,9 @@ on:
         required: false
         default: ''
 
+permissions:
+  id-token: write
+  
 env:
   ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
   TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}

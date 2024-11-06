@@ -22,6 +22,9 @@ on:
   schedule:
     - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
 
+permissions:
+  id-token: write
+  
 env:
   ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
   REGION: ${{ inputs.region || 'eu-central-1' }}
