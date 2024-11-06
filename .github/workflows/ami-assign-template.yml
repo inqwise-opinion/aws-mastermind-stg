@@ -20,16 +20,15 @@ on:
 
 env:
   ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-  TOOLKIT_VERSION: ${{ github.event.inputs.TOOLKIT_VERSION || 'default' }}
-  REGION: ${{ github.event.inputs.REGION || 'il-central-1' }}
-  MAKE_DEFAULT_VERSION: ${{ github.event.inputs.MAKE_DEFAULT_VERSION || 'true' }}
-  USES: "inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@${{ env.TOOLKIT_VERSION }}"
+  TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
+  REGION: ${{ inputs.REGION || 'il-central-1' }}
+  MAKE_DEFAULT_VERSION: ${{ inputs.MAKE_DEFAULT_VERSION || 'true' }}
 
 jobs:
   ami_assign:
-    uses: ${{ env.USES }}
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@defult
     with:
-      ROLE: ${{ env.ROLE }}
-      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
-      REGION: ${{ env.REGION }}
-      MAKE_DEFAULT_VERSION: ${{ env.MAKE_DEFAULT_VERSION }}
+      ROLE: ${{ ROLE }}
+      TOOLKIT_VERSION: ${{ TOOLKIT_VERSION }}
+      REGION: ${{ REGION }}
+      MAKE_DEFAULT_VERSION: ${{ MAKE_DEFAULT_VERSION }}

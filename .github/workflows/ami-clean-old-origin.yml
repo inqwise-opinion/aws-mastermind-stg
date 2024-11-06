@@ -24,18 +24,16 @@ on:
 
 env:
   ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
-  REGION: ${{ github.event.inputs.region || 'eu-central-1' }}
-  TOOLKIT_VERSION: ${{ github.event.inputs.toolkit_version || 'default' }}
-  KEEP_HISTORY: ${{ github.event.inputs.keep_history || '3' }}
-  LIMIT: ${{ github.event.inputs.limit || '0' }}
-  USES: "inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@${{ env.TOOLKIT_VERSION }}"
+  REGION: ${{ inputs.region || 'eu-central-1' }}
+  TOOLKIT_VERSION: ${{ inputs.toolkit_version || 'default' }}
+  KEEP_HISTORY: ${{ inputs.keep_history || '3' }}
+  LIMIT: ${{ inputs.limit || '0' }}
 
 jobs:
   deregister_old_amis:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@default
     with:
-      ROLE: ${{ env.ROLE }}
-      TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
-      REGION: ${{ env.REGION }}
-      KEEP_HISTORY: ${{ env.KEEP_HISTORY }}
-      LIMIT: ${{ env.LIMIT }}
+      TOOLKIT_VERSION: ${{ TOOLKIT_VERSION }}
+      REGION: ${{ REGION }}
+      KEEP_HISTORY: ${{ KEEP_HISTORY }}
+      LIMIT: ${{ LIMIT }}
