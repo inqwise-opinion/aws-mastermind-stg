@@ -28,10 +28,11 @@ env:
   TOOLKIT_VERSION: ${{ github.event.inputs.toolkit_version || 'default' }}
   KEEP_HISTORY: ${{ github.event.inputs.keep_history || '3' }}
   LIMIT: ${{ github.event.inputs.limit || '0' }}
+  USES: "inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@${{ env.TOOLKIT_VERSION }}"
 
 jobs:
   deregister_old_amis:
-    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@${{ env.TOOLKIT_VERSION }}
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@default
     with:
       ROLE: ${{ env.ROLE }}
       TOOLKIT_VERSION: ${{ env.TOOLKIT_VERSION }}
