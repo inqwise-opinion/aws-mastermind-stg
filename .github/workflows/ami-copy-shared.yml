@@ -33,7 +33,7 @@ jobs:
   ami_copy:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-copy-shared.yml@default
     with:
-      TOOLKIT_VERSION: ${{ TOOLKIT_VERSION }}
-      REGION: ${{ REGION }}
-      SOURCE_REGION: ${{ SOURCE_REGION }}
-      SOURCE_ACCOUNT_ID: ${{ SOURCE_ACCOUNT_ID }}
+      TOOLKIT_VERSION: ${{ github.env.TOOLKIT_VERSION }}
+      REGION: ${{ github.env.REGION }}
+      SOURCE_REGION: ${{ github.env.SOURCE_REGION }}
+      SOURCE_ACCOUNT_ID: ${{ github.env.SOURCE_ACCOUNT_ID }}

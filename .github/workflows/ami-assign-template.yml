@@ -26,9 +26,9 @@ env:
 
 jobs:
   ami_assign:
-    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@defult
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-assign-template.yml@default
     with:
-      ROLE: ${{ ROLE }}
-      TOOLKIT_VERSION: ${{ TOOLKIT_VERSION }}
-      REGION: ${{ REGION }}
-      MAKE_DEFAULT_VERSION: ${{ MAKE_DEFAULT_VERSION }}
+      ROLE: ${{ github.env.ROLE }}
+      TOOLKIT_VERSION: ${{ github.env.TOOLKIT_VERSION }}
+      REGION: ${{ github.env.REGION }}
+      MAKE_DEFAULT_VERSION: ${{ github.env.MAKE_DEFAULT_VERSION }}

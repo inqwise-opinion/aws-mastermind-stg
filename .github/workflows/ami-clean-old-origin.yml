@@ -33,7 +33,7 @@ jobs:
   deregister_old_amis:
     uses: inqwise/ansible-automation-toolkit/.github/workflows/ami-clean-old-origin.yml@default
     with:
-      TOOLKIT_VERSION: ${{ TOOLKIT_VERSION }}
-      REGION: ${{ REGION }}
-      KEEP_HISTORY: ${{ KEEP_HISTORY }}
-      LIMIT: ${{ LIMIT }}
+      TOOLKIT_VERSION: ${{ github.env.TOOLKIT_VERSION }}
+      REGION: ${{ github.env.REGION }}
+      KEEP_HISTORY: ${{ github.env.KEEP_HISTORY }}
+      LIMIT: ${{ github.env.LIMIT }}
