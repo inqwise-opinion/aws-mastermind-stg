@@ -30,3 +30,4 @@ jobs:
       TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
       REGION: ${{ inputs.REGION || 'il-central-1' }}
       MAKE_DEFAULT_VERSION: ${{ inputs.MAKE_DEFAULT_VERSION || 'true' }}
+      SNAPSHOT_TAGGING: true
