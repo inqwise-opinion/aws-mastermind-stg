@@ -30,4 +30,4 @@ jobs:
       ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
       TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
       REGION: ${{ inputs.REGION || 'il-central-1' }}
-      DRY_RUN: ${{ inputs.DRY_RUN == null || inputs.DRY_RUN }}
+      DRY_RUN: ${{ inputs.DRY_RUN != null && inputs.DRY_RUN }}
