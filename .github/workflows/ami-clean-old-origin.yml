@@ -24,7 +24,7 @@ on:
         required: false
         default: 'default'
   schedule:
-    - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
+    - cron: '0 11,23 * * *' # Runs daily at 11:00 AM and 11:00 PM
 
 permissions:
   id-token: write

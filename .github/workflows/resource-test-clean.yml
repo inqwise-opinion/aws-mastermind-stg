@@ -17,7 +17,7 @@ on:
         default: false
         type: boolean
   schedule:
-    - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
+    - cron: '0 18 * * *'  # Runs once a day at 6pm UTC
 
 permissions:
   id-token: write
