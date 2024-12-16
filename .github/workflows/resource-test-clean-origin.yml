@@ -1,0 +1,33 @@
+name: Resource Test Cleanup Imagenarium
+
+on:
+  workflow_dispatch:
+    inputs:
+      REGION:
+        description: 'AWS Region'
+        required: true
+        default: 'eu-central-1'
+      TOOLKIT_VERSION:
+        description: 'Version of the toolkit for script download'
+        required: false
+        default: 'default'
+      DRY_RUN:
+        description: 'Enable dry-run mode'
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    - cron: '0 18 * * *'  # Runs once a day at 6pm UTC
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  cleanup_test_resources:
+    uses: inqwise/ansible-automation-toolkit/.github/workflows/resource-test-clean.yml@default
+    with:
+      ROLE: "arn:aws:iam::992382682634:role/aws-mastermind-workflow-role"
+      TOOLKIT_VERSION: ${{ inputs.TOOLKIT_VERSION || 'default' }}
+      REGION: ${{ inputs.REGION || 'eu-central-1' }}
+      DRY_RUN: ${{ inputs.DRY_RUN != null && inputs.DRY_RUN }}
